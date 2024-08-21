@@ -5,14 +5,12 @@ import pandas as pd
 from fpdf import FPDF
 import random
 import smtplib
-from flask_migrate import Migrate
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///micdrop.db'
 db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
 
 
 class Coordinator(db.Model):
