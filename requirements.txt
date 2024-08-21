@@ -14,3 +14,4 @@ SQLAlchemy==2.0.32
 typing_extensions==4.12.2
 Werkzeug==3.0.3
 pandas==2.2.2
+fpdf==1.7.2
