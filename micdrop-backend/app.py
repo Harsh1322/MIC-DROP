@@ -8,6 +8,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
+import threading
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///micdrop.db'
@@ -27,8 +28,8 @@ class Participant(db.Model):
     contact = db.Column(db.String(20), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     episode = db.Column(db.String(100), nullable=False)
-    votes = db.Column(db.Integer, nullable=True)
-    avg_score = db.Column(db.Float, nullable=True)  # Add average score field
+    vote_count = db.Column(db.Integer, default=0)
+    avg_score = db.Column(db.Float, default=0)  # Add average score field
     report_id = db.Column(db.Integer, db.ForeignKey('report.id'), nullable=True)  # Link to Report
 
 class Report(db.Model):
@@ -50,6 +51,11 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     otp = db.Column(db.String(6), nullable=True)
+
+class Vote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    participant_id = db.Column(db.Integer, db.ForeignKey('participant.id'), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
 
 @app.route('/api/admin/send-otp', methods=['POST'])
 def send_otp():
@@ -311,8 +317,8 @@ def get_participants():
         'id': p.id,
         'name': p.name,
         'contact': p.contact,
-        'category': p.category
-    } for p in participants])
+        'category': p.category,
+        'score' : p.avg_score    } for p in participants])
 
 @app.route('/api/coordinator/add-participant', methods=['POST'])
 def add_participant():
@@ -388,6 +394,66 @@ def submit_score():
     score = data['score']
     # Implement logic to save score, ensure unique scoring per device
     return jsonify({'message': 'Score submitted successfully'})
+
+voting_active = False
+active_participant_id = -1
+
+def deactivate_voting():
+    global voting_active, active_participant_id
+    voting_active = False
+    active_participant_id = -1
+
+@app.route('/admin/activate_voting', methods=['POST'])
+def activate_voting():
+    global voting_active, active_participant_id
+    voting_active = True
+    data = request.json
+    active_participant_id = data.get('participant_id')
+    # Set a timer to deactivate voting after 30 seconds
+    timer = threading.Timer(30.0, deactivate_voting)
+    timer.start()
+
+    return jsonify({'message': 'Voting activated for 30 seconds'})
+
+@app.route('/admin/voting_status', methods=['GET'])
+def voting_status():
+    return jsonify({
+        'participant_id': active_participant_id
+    })
+
+@app.route('/vote', methods=['POST'])
+def vote():
+    if not voting_active:
+        return jsonify({'message': 'Voting is not active'}), 403
+
+    data = request.json
+    participant_id = data.get('participant_id')
+    score = data.get('score')
+
+    vote = Vote(participant_id=participant_id, score=score)
+    db.session.add(vote)
+    participant = Participant.query.get(participant_id)
+    if participant.vote_count==0:
+        participant.avg_score=0
+    if participant:
+        participant.avg_score = (participant.avg_score * participant.vote_count + score) / (participant.vote_count + 1)
+        participant.vote_count += 1
+        db.session.commit()
+
+        return jsonify({'message': 'Vote recorded'})
+    else:
+        return jsonify({'message': 'Participant not found'}), 404
+    
+# @app.route('/api/coordinator/votes', methods=['GET'])
+# def get_participants():
+#     episode = request.args.get('episode')
+#     participants = Participant.query.filter_by(episode=episode).all()
+#     return jsonify([{
+#         'id': p.id,
+#         'name': p.name,
+#         'contact': p.contact,
+#         'category': p.category
+#     } for p in participants])
 
 
 with app.app_context():
