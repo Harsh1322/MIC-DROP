@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, TextField, MenuItem, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Card, CardContent, Select, Box} from '@mui/material';
+import apiClient from '../api';
 
 const EPISODES = [
 { id: '1', name: 'AGARTALA' },
@@ -380,7 +381,7 @@ const CoordinatorDashboard = () => {
 
   const handleSendOtp = async () => {
     try {
-      await axios.post('/api/coordinator/send-coordinator-otp', { email: email, episode: episode });
+      await apiClient.post('/api/coordinator/send-coordinator-otp', { email: email, episode: episode });
       setMessage('OTP sent to your Email Address.');
     } catch (error) {
       setMessage('Failed to send OTP.');
@@ -390,7 +391,7 @@ const CoordinatorDashboard = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      await axios.post('/api/coordinator/verify-coordinator-otp', { email: email, episode: episode,otp: otp });
+      await apiClient.post('/api/coordinator/verify-coordinator-otp', { email: email, episode: episode,otp: otp });
       setIsAuthenticated(true);
       setMessage('OTP verified. You are now logged in.');
     } catch (error) {
@@ -407,7 +408,7 @@ const CoordinatorDashboard = () => {
 
   const fetchParticipants = async () => {
     try {
-      const response = await axios.get(`/api/coordinator/participants?episode=${episode}`);
+      const response = await apiClient.get(`/api/coordinator/participants?episode=${episode}`);
       setParticipants(response.data);
     } catch (error) {
       console.error("Error fetching participants:", error);
@@ -416,7 +417,7 @@ const CoordinatorDashboard = () => {
 
   const handleStartContest = async () => {
     try {
-      await axios.post(`/api/coordinator/start-contest`, { episode });
+      await apiClient.post(`/api/coordinator/start-contest`, { episode });
       setContestStarted(true);
     } catch (error) {
       console.error("Error starting contest:", error);
@@ -425,7 +426,7 @@ const CoordinatorDashboard = () => {
 
   const handleResetContest = async () => {
     try {
-      await axios.post(`/api/coordinator/reset-contest`, { episode });
+      await apiClient.post(`/api/coordinator/reset-contest`, { episode });
       setContestStarted(false);
       fetchParticipants();
     } catch (error) {
@@ -435,7 +436,7 @@ const CoordinatorDashboard = () => {
 
   const handleAddParticipant = async () => {
     try {
-      await axios.post(`/api/coordinator/add-participant`, { ...newParticipant, episode });
+      await apiClient.post(`/api/coordinator/add-participant`, { ...newParticipant, episode });
       fetchParticipants();
       setNewParticipant({ name: '', contact: '', category: '' });
     } catch (error) {
@@ -445,7 +446,7 @@ const CoordinatorDashboard = () => {
 
   const handleStartScoring = async (participantId) => {
     try {
-      const response = await axios.post(`/api/coordinator/start-scoring`, { participantId, episode });
+      const response = await apiClient.post(`/api/coordinator/start-scoring`, { participantId, episode });
       setScoringData(response.data);
     } catch (error) {
       console.error("Error starting scoring:", error);
@@ -454,7 +455,7 @@ const CoordinatorDashboard = () => {
 
   const handleSubmitReport = async () => {
     try {
-      await axios.post(`/api/coordinator/submit-report`, {
+      await apiClient.post(`/api/coordinator/submit-report`, {
         episode,
         date: eventDate,
         kishoresCount,
@@ -469,7 +470,7 @@ const CoordinatorDashboard = () => {
 
   const handleScore = async (participantId, score) => {
     try {
-      await axios.post(`/api/coordinator/submit-score`, { participantId, score });
+      await apiClient.post(`/api/coordinator/submit-score`, { participantId, score });
       alert("Score submitted successfully!");
     } catch (error) {
       console.error("Error submitting score:", error);

@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import apiClient from '../api';
 
 const LakshyaDashboard = () => {
     const activateVoting = async () => {
         try {
-            await axios.post('/admin/activate_voting', { participant_id: 1});
+            await apiClient.post('/admin/activate_voting', { participant_id: 1});
             alert('Voting activated for 30 seconds');
         } catch (error) {
             console.error('Error activating voting:', error);

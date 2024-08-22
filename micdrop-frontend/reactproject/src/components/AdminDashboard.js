@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Typography, TextField, MenuItem, Button, Table, TableBody, TableCell, TableHead, TableRow, Card, CardContent, Box, TableContainer, Paper, Collapse } from '@mui/material';
+import apiClient from '../api';
 
 // Static list of episodes
 const EPISODES = [
@@ -377,7 +378,7 @@ const AdminDashboard = () => {
 
   const handleSendOtp = async () => {
     try {
-      await axios.post('/api/admin/send-otp', { email: email });
+      await apiClient.post('/api/admin/send-otp', { email: email });
       setMessage('OTP sent to your Email Address.');
     } catch (error) {
       setMessage('Failed to send OTP.');
@@ -387,7 +388,7 @@ const AdminDashboard = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      await axios.post('/api/admin/verify-otp', { email: email, otp });
+      await apiClient.post('/api/admin/verify-otp', { email: email, otp });
       setIsAuthenticated(true);
       setMessage('OTP verified. You are now logged in.');
     } catch (error) {
@@ -404,7 +405,7 @@ const AdminDashboard = () => {
 
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get('/api/admin/coordinators');
+      const response = await apiClient.get('/api/admin/coordinators');
       setCoordinators(response.data);
     } catch (error) {
       console.error("Error fetching coordinators:", error);
@@ -413,7 +414,7 @@ const AdminDashboard = () => {
 
   const fetchEpisodes = async () => {
     try {
-      const response = await axios.get('/api/admin/episodes');
+      const response = await apiClient.get('/api/admin/episodes');
       setEpisodes(response.data);
     } catch (error) {
       console.error("Error fetching episodes:", error);
@@ -422,7 +423,7 @@ const AdminDashboard = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get('/api/admin/reports');
+      const response = await apiClient.get('/api/admin/reports');
       setReports(response.data);
     } catch (error) {
       console.error("Error fetching reports:", error);
@@ -431,7 +432,7 @@ const AdminDashboard = () => {
 
   const handleAddCoordinator = async () => {
     try {
-      const response = await axios.post('/api/admin/add-coordinator', newCoordinator);
+      const response = await apiClient.post('/api/admin/add-coordinator', newCoordinator);
       alert(response.data.message);
       fetchCoordinators();
       setNewCoordinator({ name: '', email: '', episode: '' });
@@ -442,7 +443,7 @@ const AdminDashboard = () => {
 
   const handleDeleteCoordinator = async (id) => {
     try {
-      const response = await axios.delete(`/api/admin/delete-coordinator/${id}`);
+      const response = await apiClient.delete(`/api/admin/delete-coordinator/${id}`);
       alert(response.data.message);
       fetchCoordinators();
     } catch (error) {
@@ -452,7 +453,7 @@ const AdminDashboard = () => {
 
   const handleExportReport = async (reportId, format) => {
     try {
-      const response = await axios.get(`/api/admin/export-report/${reportId}?format=${format}`, {
+      const response = await apiClient.get(`/api/admin/export-report/${reportId}?format=${format}`, {
         responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
