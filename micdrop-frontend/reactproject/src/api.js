@@ -1,7 +1,7 @@
 // src/API.js
 import axios from 'axios';
 
-const API_BASE_URL = 'https://mic-drop-030c.onrender.com';
+const API = 'https://mic-drop-030c.onrender.com';
 // || 'http://localhost:5000/api';
 
 const apiClient = axios.create({
