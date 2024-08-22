@@ -15,3 +15,4 @@ export const register = (data) => API.post("/register", data);
 export const startContest = (data) => API.post("/start-contest", data);
 export const addParticipant = (data) => API.post("/add-participant", data);
 export const submitVote = (data) => API.post("/submit-vote", data);
+export const getApiUrl = (endpoint) => `${API}${endpoint}`;
