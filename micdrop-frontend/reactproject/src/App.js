@@ -4,6 +4,8 @@ import AdminDashboard from './components/AdminDashboard';
 import CoordinatorDashboard from './components/CoordinatorDashboard';
 import ScorerDashboard from './components/ScorerDashboard';
 import HomePage from './components/HomePage';
+import VotingComponent from './components/VotingComponent';
+import LakshyaDashboard from './components/LakshyaDashboard';
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/coordinator" element={<CoordinatorDashboard />} />
         <Route path="/scorer" element={<ScorerDashboard />} />
+        <Route path="/voter" element={<VotingComponent />} />
+        <Route path="/lakshya" element={<LakshyaDashboard />} />
       </Routes>
     </Router>
   );
