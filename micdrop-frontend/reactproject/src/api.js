@@ -5,7 +5,7 @@ const API = 'https://mic-drop-030c.onrender.com';
 // || 'http://localhost:5000/api';
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API,
   headers: {
     'Content-Type': 'application/json',
   },
