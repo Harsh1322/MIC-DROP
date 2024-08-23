@@ -33,8 +33,7 @@ class Participant(db.Model):
     category = db.Column(db.String(50), nullable=False)
     episode = db.Column(db.String(100), nullable=False)
     vote_count = db.Column(db.Integer, default=0)
-    avg_score = db.Column(db.Float, default=0)  # Add average score field
-    report_id = db.Column(db.Integer, db.ForeignKey('report.id'), nullable=True)  # Link to Report
+    avg_score = db.Column(db.Float, default=0) 
 
 class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +41,6 @@ class Report(db.Model):
     date = db.Column(db.String(80), nullable=False)
     totalKishores = db.Column(db.Integer, nullable=False)
     totalCategories = db.Column(db.Integer, nullable=False)
-    participants = db.relationship('Participant', backref='report', lazy=True)
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -79,36 +77,30 @@ def send_otp():
     db.session.commit()
 
     # Here you would send the OTP via email
-    # For demonstration, we'll print it
     print(f"OTP for {email}: {otp}")
 
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "gadiya.harsh@gmail.com"  # Replace with your Gmail address
-    smtp_password = "hubgctbpqdxrxaaq"  # Replace with your Gmail password or app password
+    smtp_user = "gadiya.harsh@gmail.com"  
+    smtp_password = "hubgctbpqdxrxaaq" 
 
     subject = "Welcome to Mic Drop Portal!!"
     body = f"Your OTP code is: {otp}"
 
-    # Create the email
     msg = MIMEMultipart()
     msg['From'] = smtp_user
     msg['To'] = email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     
-    # Send the email
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()  # Secure the connection
         server.login(smtp_user, smtp_password)
         server.sendmail(smtp_user, email, msg.as_string())
         server.quit()
-        # print("OTP sent successfully!")
         return jsonify({'message': 'OTP sent successfully'}), 200
-        # return otp  # Return the OTP for verification purposes
     except Exception as e:
-        # print(f"Failed to send OTP: {e}")
         return jsonify({'message': 'OTP send failed'}), 400
 
 @app.route('/api/coordinator/send-coordinator-otp', methods=['POST'])
@@ -125,31 +117,26 @@ def send_coordinator_otp():
 
         smtp_server = "smtp.gmail.com"
         smtp_port = 587
-        smtp_user = "gadiya.harsh@gmail.com"  # Replace with your Gmail address
-        smtp_password = "hubgctbpqdxrxaaq"  # Replace with your Gmail password or app password
+        smtp_user = "gadiya.harsh@gmail.com"
+        smtp_password = "hubgctbpqdxrxaaq"  
 
         subject = "Welcome to Mic Drop Portal!!"
         body = f"Your OTP code is: {otp}"
 
-        # Create the email
         msg = MIMEMultipart()
         msg['From'] = smtp_user
         msg['To'] = email
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
     
-        # Send the email
         try:
             server = smtplib.SMTP(smtp_server, smtp_port)
             server.starttls()  # Secure the connection
             server.login(smtp_user, smtp_password)
             server.sendmail(smtp_user, email, msg.as_string())
             server.quit()
-            # print("OTP sent successfully!")
             return jsonify({'message': 'OTP sent successfully'}), 200
-            #return otp  # Return the OTP for verification purposes
         except Exception as e:
-            # print(f"Failed to send OTP: {e}")
             return jsonify({'message': 'OTP send failed'}), 400
     else:
         print(email,episode)
@@ -157,7 +144,7 @@ def send_coordinator_otp():
         print([{
         'id': c.id,
         'name': c.name,
-        'email': c.email,  # Changed to email
+        'email': c.email, 
         'episode': c.episode
     } for c in coordinators])
         return jsonify({'error': 'Unauthorized'}), 403
@@ -191,7 +178,7 @@ def get_coordinators():
     return jsonify([{
         'id': c.id,
         'name': c.name,
-        'email': c.email,  # Changed to email
+        'email': c.email,  
         'episode': c.episode
     } for c in coordinators])
 
@@ -200,7 +187,7 @@ def add_coordinator():
     data = request.json
     new_coordinator = Coordinator(
         name=data['name'],
-        email=data['email'],  # Changed to email
+        email=data['email'],  
         episode=data['episode']
     )
     db.session.add(new_coordinator)
@@ -221,96 +208,14 @@ def get_reports():
     reports = Report.query.all()
     result = []
     for r in reports:
-        participants = Participant.query.filter_by(episode=r.episode).all()
-        participants_data = [{
-            'id': p.id,
-            'name': p.name,
-            'category': p.category,
-            'votes': p.votes,
-            'avgScore': p.avg_score
-        } for p in participants]
-        
         result.append({
             'id': r.id,
             'episode': r.episode,
             'date': r.date,
             'totalKishores': r.totalKishores,
             'totalCategories': r.totalCategories,
-            'participants': participants_data
         })
     return jsonify(result)
-
-
-@app.route('/api/admin/export-report/<int:report_id>', methods=['GET'])
-def export_report(report_id):
-    report = Report.query.get(report_id)
-    if not report:
-        return jsonify({'message': 'Report not found'}), 404
-
-    format = request.args.get('format')
-    
-    # Fetch participants for the report
-    participants = Participant.query.filter_by(episode=report.episode).all()
-    
-    if format == 'xlsx':
-        # Create main report data
-        data = {
-            'Episode': [report.episode],
-            'Date': [report.date],
-            'Total Kishores': [report.totalKishores],
-            'Total Categories': [report.totalCategories]
-        }
-        
-        # Create DataFrame for the main report
-        df_report = pd.DataFrame(data)
-        
-        # Create DataFrame for participants
-        participants_data = {
-            'SNo.': [i+1 for i in range(len(participants))],
-            'Participant Name': [p.name for p in participants],
-            'Category': [p.category for p in participants],
-            'Number of Votes': [p.votes for p in participants],
-            'Average Score': [p.avg_score for p in participants]
-        }
-        df_participants = pd.DataFrame(participants_data)
-        
-        # Write to Excel
-        output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df_report.to_excel(writer, sheet_name='Report', index=False)
-            df_participants.to_excel(writer, sheet_name='Participants', index=False)
-        
-        output.seek(0)
-        return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='report.xlsx')
-
-    elif format == 'pdf':
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        pdf.cell(200, 10, txt="Report", ln=True, align='C')
-        
-        # Add main report data
-        pdf.ln(10)
-        pdf.cell(200, 10, txt=f"Episode: {report.episode}", ln=True)
-        pdf.cell(200, 10, txt=f"Date: {report.date}", ln=True)
-        pdf.cell(200, 10, txt=f"Total Kishores: {report.totalKishores}", ln=True)
-        pdf.cell(200, 10, txt=f"Total Categories: {report.totalCategories}", ln=True)
-        
-        # Add participants
-        pdf.ln(10)
-        pdf.cell(200, 10, txt="Participants:", ln=True)
-        pdf.cell(200, 10, txt="SNo. | Name | Category | Votes | Avg Score", ln=True)
-        
-        for i, p in enumerate(participants):
-            pdf.cell(200, 10, txt=f"{i+1} | {p.name} | {p.category} | {p.votes} | {p.avg_score:.2f}", ln=True)
-        
-        output = io.BytesIO()
-        pdf.output(output)
-        output.seek(0)
-        
-        return send_file(output, mimetype='application/pdf', as_attachment=True, attachment_filename='report.pdf')
-
-    return jsonify({'message': 'Unsupported format'}), 400
 
 
 @app.route('/api/coordinator/participants', methods=['GET'])
@@ -338,37 +243,16 @@ def add_participant():
     db.session.commit()
     return jsonify({'message': 'Participant added successfully'})
 
-@app.route('/api/coordinator/start-contest', methods=['POST'])
-def start_contest():
-    data = request.json
-    episode = data['episode']
-    # Implement logic to start the contest
-    return jsonify({'message': 'Contest started successfully'})
-
-@app.route('/api/coordinator/reset-contest', methods=['POST'])
-def reset_contest():
-    data = request.json
-    episode = data['episode']
-    # Implement logic to reset the contest
-    return jsonify({'message': 'Contest reset successfully'})
-
-@app.route('/api/coordinator/start-scoring', methods=['POST'])
-def start_scoring():
-    data = request.json
-    participant_id = data['participantId']
-    episode = data['episode']
-    # Fetch participant details and return scoring options
-    participant = Participant.query.get(participant_id)
-    # Simulating scoring options, modify as needed
-    scoring_data = {
-        'participantId': participant.id,
-        'name': participant.name,
-        'category': participant.category
-    }
-    return jsonify([scoring_data])
+contest_active = False
+voting_active = False
+active_participant_id = -1
 
 @app.route('/api/coordinator/submit-report', methods=['POST'])
 def submit_report():
+    global contest_active, voting_active, active_participant_id
+    contest_active = False
+    voting_active = False
+    active_participant_id = -1
     data = request.json
     report = Report(
         episode=data['episode'],
@@ -376,62 +260,102 @@ def submit_report():
         totalKishores = data['kishoresCount'],
         totalCategories =data['categoriesCount']
     )
-    # participant_data=data['participants'],
-    # participants = []
-    # for item in participant_data:
-    #     try:
-    #         participant = Participant(
-    #             name=item['name'],
-    #             contact=item['contact'],
-    #             category=item['category'],
-    #             episode=item['episode']
-    #         )
-    #         participants.append(participant)
-    #     except KeyError as e:
-    #         return jsonify({"error": f"Missing field {e.args[0]}"}), 400
-    # report.participants = participants  
     db.session.add(report)
     db.session.commit()
+
     return jsonify({'message': 'Report submitted successfully'})
 
+@app.route('/api/scorer/get-voting-data', methods=['GET'])
+def get_voting_data():
+    participant = Participant.query.get(active_participant_id)
+    if participant:
+        return jsonify({'name':participant.name, 'category':participant.category})
 
-@app.route('/api/scorer/contest-status', methods=['GET'])
-def get_contest_status():
-    episode = request.args.get('episode')
-    # Check if contest has started for the episode and get participants
-    participants = Participant.query.filter_by(episode=episode).all()
-    return jsonify({
-        'started': True,  # Replace with actual contest status check
-        'participants': [{'id': p.id, 'name': p.name, 'category': p.category} for p in participants]
-    })
+    return jsonify({'message': 'Participant not found'})
 
-@app.route('/api/scorer/submit-score', methods=['POST'])
-def submit_score():
+
+@app.route('/api/coordinator/start-contest', methods=['GET'])
+def start_contest():
+    global contest_active
+    if not contest_active:
+        contest_active=True
+    return jsonify({'message': 'Contest started successfully'})
+
+@app.route('/api/coordinator/reset-contest', methods=['POST'])
+def reset_contest():
+    global contest_active, voting_active, active_participant_id
     data = request.json
-    participant_id = data['participantId']
-    score = data['score']
-    # Implement logic to save score, ensure unique scoring per device
-    return jsonify({'message': 'Score submitted successfully'})
+    episode = data['episode']
+    contest_active = False
+    voting_active = False
+    active_participant_id = -1
+    for p in Participant.query.filter_by(episode=episode).all():
+        db.session.delete(p)
+        p.avg_score=0
+        p.vote_count=0
+        db.session.add(p)
+        db.session.commit()
+    # Implement logic to reset the contest
+    return jsonify({'message': 'Contest reset successfully'})
 
-voting_active = False
-active_participant_id = -1
+# @app.route('/api/coordinator/start-scoring', methods=['POST'])
+# def start_scoring():
+#     data = request.json
+#     participant_id = data['participantId']
+#     episode = data['episode']
+#     # Fetch participant details and return scoring options
+#     participant = Participant.query.get(participant_id)
+#     # Simulating scoring options, modify as needed
+#     scoring_data = {
+#         'participantId': participant.id,
+#         'name': participant.name,
+#         'category': participant.category
+#     }
+#     return jsonify([scoring_data])
+
+
+
+# @app.route('/api/scorer/contest-status', methods=['GET'])
+# def get_contest_status():
+#     episode = request.args.get('episode')
+#     # Check if contest has started for the episode and get participants
+#     participants = Participant.query.filter_by(episode=episode).all()
+#     return jsonify({
+#         'started': True,  # Replace with actual contest status check
+#         'participants': [{'id': p.id, 'name': p.name, 'category': p.category} for p in participants]
+#     })
+
+@app.route('/api/coordinator/contest-status', methods=['GET'])
+def get_contest_status():
+    return jsonify({'status':contest_active})
+
+# @app.route('/api/scorer/submit-score', methods=['POST'])
+# def submit_score():
+#     data = request.json
+#     participant_id = data['participantId']
+#     score = data['score']
+#     # Implement logic to save score, ensure unique scoring per device
+#     return jsonify({'message': 'Score submitted successfully'})
+
 
 def deactivate_voting():
     global voting_active, active_participant_id
-    voting_active = False
-    active_participant_id = -1
+    if contest_active:
+        voting_active = False
+        active_participant_id = -1
 
 @app.route('/admin/activate_voting', methods=['POST'])
 def activate_voting():
     global voting_active, active_participant_id
-    voting_active = True
-    data = request.json
-    active_participant_id = data.get('participant_id')
-    # Set a timer to deactivate voting after 30 seconds
-    timer = threading.Timer(30.0, deactivate_voting)
-    timer.start()
-
-    return jsonify({'message': 'Voting activated for 30 seconds'})
+    if contest_active:
+        voting_active = True
+        data = request.json
+        active_participant_id = data.get('participant_id')
+        # Set a timer to deactivate voting after 30 seconds
+        timer = threading.Timer(30.0, deactivate_voting)
+        timer.start()
+        return jsonify({'message': 'Voting activated for 30 seconds'})
+    return jsonify({'message': 'Contest Not started'})
 
 @app.route('/admin/voting_status', methods=['GET'])
 def voting_status():
@@ -441,7 +365,7 @@ def voting_status():
 
 @app.route('/vote', methods=['POST'])
 def vote():
-    if not voting_active:
+    if not voting_active and contest_active:
         return jsonify({'message': 'Voting is not active'}), 403
 
     data = request.json
@@ -451,8 +375,6 @@ def vote():
     vote = Vote(participant_id=participant_id, score=score)
     db.session.add(vote)
     participant = Participant.query.get(participant_id)
-    if participant.vote_count==0:
-        participant.avg_score=0
     if participant:
         participant.avg_score = (participant.avg_score * participant.vote_count + score) / (participant.vote_count + 1)
         participant.vote_count += 1

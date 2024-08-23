@@ -417,7 +417,7 @@ const CoordinatorDashboard = () => {
 }, [episode]);
   const handleStartContest = async () => {
     try {
-      await apiClient.post(`/api/coordinator/start-contest`, { episode });
+      await apiClient.get(`/api/coordinator/start-contest`);
       setContestStarted(true);
     } catch (error) {
       console.error("Error starting contest:", error);
@@ -446,8 +446,8 @@ const CoordinatorDashboard = () => {
 
   const handleStartScoring = async (participantId) => {
     try {
-      const response = await apiClient.post(`/api/coordinator/start-scoring`, { participantId, episode });
-      setScoringData(response.data);
+      const response = await axios.post(`/admin/activate_voting`, { participant_id:participantId });
+      // setScoringData(response.data);
     } catch (error) {
       console.error("Error starting scoring:", error);
     }

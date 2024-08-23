@@ -1,0 +1,1 @@
+web: gunicorn micdrop-backend.app:app
