@@ -9,6 +9,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 import threading
+from sqlalchemy import desc
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///micdrop.db'
@@ -318,7 +320,8 @@ def get_participants():
         'name': p.name,
         'contact': p.contact,
         'category': p.category,
-        'score' : p.avg_score    } for p in participants])
+        'score' : p.avg_score,
+        'votes': p.vote_count   } for p in participants])
 
 @app.route('/api/coordinator/add-participant', methods=['POST'])
 def add_participant():
@@ -368,10 +371,23 @@ def submit_report():
     report = Report(
         episode=data['episode'],
         date=data['date'],
-        participants=data['kishoresCount'],
-        votes=0,  # Adjust based on actual scoring data
-        averageScore=0  # Calculate based on actual scoring data
+        totalKishores = data['kishoresCount'],
+        totalCategories =data['categoriesCount']
     )
+    # participant_data=data['participants'],
+    # participants = []
+    # for item in participant_data:
+    #     try:
+    #         participant = Participant(
+    #             name=item['name'],
+    #             contact=item['contact'],
+    #             category=item['category'],
+    #             episode=item['episode']
+    #         )
+    #         participants.append(participant)
+    #     except KeyError as e:
+    #         return jsonify({"error": f"Missing field {e.args[0]}"}), 400
+    # report.participants = participants  
     db.session.add(report)
     db.session.commit()
     return jsonify({'message': 'Report submitted successfully'})
@@ -443,6 +459,13 @@ def vote():
         return jsonify({'message': 'Vote recorded'})
     else:
         return jsonify({'message': 'Participant not found'}), 404
+    
+
+@app.route('/leaderboard', methods=['GET'])
+def leaderboard():
+    participants = Participant.query.order_by(desc(Participant.avg_score)).all()
+    leaderboard = [{'id': p.id, 'name': p.name, 'score': p.avg_score, 'vote_count': p.vote_count} for p in participants]
+    return jsonify(leaderboard)    
     
 # @app.route('/api/coordinator/votes', methods=['GET'])
 # def get_participants():

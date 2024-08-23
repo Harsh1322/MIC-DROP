@@ -6,6 +6,8 @@ import ScorerDashboard from './components/ScorerDashboard';
 import HomePage from './components/HomePage';
 import VotingComponent from './components/VotingComponent';
 import LakshyaDashboard from './components/LakshyaDashboard';
+import ScorerPage from './components/ScorerPage';
+import Leaderboard from './components/LeaderBoard';
 
 function App() {
   return (
@@ -15,8 +17,9 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/coordinator" element={<CoordinatorDashboard />} />
         <Route path="/scorer" element={<ScorerDashboard />} />
-        <Route path="/voter" element={<VotingComponent />} />
+        <Route path="/voter/:id" element={<ScorerPage />} />
         <Route path="/lakshya" element={<LakshyaDashboard />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
     </Router>
   );

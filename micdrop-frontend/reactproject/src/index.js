@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ContestProvider } from './context/ContestProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <ContestProvider>
     <App />
+    </ContestProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

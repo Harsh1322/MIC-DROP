@@ -1,0 +1,132 @@
+/* General container for the voting page */
+.voting-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Header styling */
+  h1 {
+    font-size: 2.5rem;
+    margin: 20px 0;
+    color: #333;
+  }
+  
+  /* Timer container to align it centrally */
+  .timer-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Circular timer styling */
+  .timer-circle {
+    width: 120px;
+    height: 120px;
+    border: 8px solid #007bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: countdown 30s linear forwards;
+  }
+  
+  /* Animation for the timer color transition */
+  @keyframes countdown {
+    from {
+      border-color: #007bff;
+    }
+    to {
+      border-color: #ff0000;
+    }
+  }
+  
+  /* Timer text inside the circle */
+  .timer-text {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: bold;
+    position: absolute;
+  }
+  
+  /* Grid container for voting cards */
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  /* Individual vote cards styling */
+  .vote-card {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover effect for vote cards */
+  .vote-card:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Disabled state for vote cards */
+  .vote-card:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Dialog overlay for modal effect */
+  .dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Dialog box styling */
+  .dialog-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Dialog text styling */
+  .dialog-box p {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  /* Fade-in animation for the dialog box */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
