@@ -12,6 +12,9 @@ const ScorerPage = () => {
   const [dialogMessage, setDialogMessage] = useState('');
   const [votingActive, setVotingActive] = useState(false);
   const [participantId, setParticipantId] = useState(-1);
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+
   const navigate = useNavigate();
   const {id}=useParams();
 
@@ -29,23 +32,20 @@ const ScorerPage = () => {
     setTimeout(() => navigate('/scorer'), 2000); // Redirect to home after 2 seconds
   };
 
-//   useEffect(() => {
-//     const checkVotingStatus = async () => {
-//         try {
-//             const response = await apiClient.get('/admin/voting_status');
-//             if(response.data.participant_id!==-1){
-//                 setParticipantId(response.data.participant_id)
-//                 console.log(response.data.participant_id)
-//             // Determine voting status by checking the backend or a specific endpoint
-//             setVotingActive(true); // Simulate voting active status
-//             setTimeout(() => setVotingActive(false), 30000);}
-//         } catch (error) {
-//             console.error('Error checking voting status:', error);
-//         }
-//     };
+  useEffect(() => {
+    const getParticipantDetails = async () => {
+        try {
+            const response = await apiClient.get('/api/scorer/get-voting-data');
+            setCategory(response.data.category)
+            setName(response.data.name)
+          
+        } catch (error) {
+            console.error('Error checking voting status:', error);
+        }
+    };
 
-//     checkVotingStatus();
-// }, []);
+    getParticipantDetails();
+}, []);
 
 const submitVote = async (score) => {
     try {
@@ -54,7 +54,7 @@ const submitVote = async (score) => {
         setDialogMessage('Thank you for voting! Do not refresh! You will be redirected to another page');
         setShowDialog(true);
         setVotingActive(false)
-        setTimeout(() => navigate('/scorer'), 30000); // Redirect to home after 2 seconds
+        setTimeout(() => navigate('/thankyou'), 2000); // Redirect to home after 2 seconds
         
     } catch (error) {
         console.error('Error submitting vote:', error);
@@ -66,7 +66,7 @@ const submitVote = async (score) => {
   return (
     <div className="voting-container">
       <Timer seconds={30} onTimeOver={handleTimeOver} />
-      <h1>Vote for Harsh M's performance</h1>
+      <h1>Score for {name} {category} performance</h1>
       <div className="card-container">
         {Array.from({ length: 10 }, (_, index) => (
           <button

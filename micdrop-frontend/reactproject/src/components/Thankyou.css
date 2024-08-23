@@ -1,0 +1,23 @@
+.thank-you-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ece9e6, #ffffff);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.thank-you-heading {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.thank-you-message {
+    font-size: 1.25rem;
+    color: #666;
+    max-width: 600px;
+    line-height: 1.5;
+}

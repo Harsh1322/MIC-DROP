@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Container, Typography, TextField, MenuItem, Button, Table, TableBody, TableCell, TableHead, TableRow, Card, CardContent, Box, TableContainer, Paper, Collapse } from '@mui/material';
 import { useContext } from 'react';
 import { ContestContext } from '../context/ContestProvider';
+import TablePage from './TablePage';
 import apiClient from '../api';
 
 // Static list of episodes
@@ -572,6 +573,10 @@ const AdminDashboard = () => {
 <Typography variant="h6" gutterBottom style={{ marginTop: '2rem' }}>
   Reports
 </Typography>
+
+<TablePage/>
+
+
 <TableContainer component={Paper}>
       <Table>
         <TableHead>
