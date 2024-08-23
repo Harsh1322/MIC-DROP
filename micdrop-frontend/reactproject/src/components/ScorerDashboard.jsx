@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ContestContext } from '../context/ContestProvider';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../api';
 
 const ScorerDashboard = () => {
   const [episode, setEpisode] = useState('');
@@ -19,7 +20,7 @@ const ScorerDashboard = () => {
   useEffect(() => {
     const fetchContestStatus = async () => {
       try {
-        const response = await axios.get(`/api/scorer/contest-status?episode=${episode}`);
+        const response = await apiClient.get(`/api/scorer/contest-status?episode=${episode}`);
         setContestStarted(response.data.started);
         setParticipants(response.data.participants);
       } catch (error) {
@@ -59,7 +60,7 @@ const ScorerDashboard = () => {
     }
 
     try {
-      await axios.post(`/api/scorer/submit-score`, { participantId, score });
+      await apiClient.post(`/api/scorer/submit-score`, { participantId, score });
       setSubmittedScores(new Set([...submittedScores, participantId]));
       alert("Score submitted successfully!");
     } catch (error) {

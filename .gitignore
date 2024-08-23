@@ -1,6 +1,6 @@
 /.vscode
 /micdrop-backend/instance
-/micdrop-backend/_pycache_
+/micdrop-backend/__pycache__
 /micenv
 /node_modules
 /micdrop-backend/query.py

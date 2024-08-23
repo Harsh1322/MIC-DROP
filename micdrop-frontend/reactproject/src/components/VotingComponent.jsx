@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import apiClient from '../api';
 
 const VotingComponent = () => {
     const [votingActive, setVotingActive] = useState(false);
@@ -9,7 +10,7 @@ const VotingComponent = () => {
     useEffect(() => {
         const checkVotingStatus = async () => {
             try {
-                const response = await axios.get('/admin/voting_status');
+                const response = await apiClient.get('/admin/voting_status');
                 if(response.data.participant_id!==-1){
                     setParticipantId(response.data.participant_id)
                     console.log(response.data.participant_id)
@@ -27,7 +28,7 @@ const VotingComponent = () => {
     const submitVote = async (score) => {
         setSelectedScore(score);
         try {
-            await axios.post('/vote', { participant_id: participantId, score });
+            await apiClient.post('/vote', { participant_id: participantId, score });
             alert('Vote recorded!');
         } catch (error) {
             console.error('Error submitting vote:', error);
