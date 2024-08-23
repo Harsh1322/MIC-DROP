@@ -298,33 +298,6 @@ def reset_contest():
     # Implement logic to reset the contest
     return jsonify({'message': 'Contest reset successfully'})
 
-# @app.route('/api/coordinator/start-scoring', methods=['POST'])
-# def start_scoring():
-#     data = request.json
-#     participant_id = data['participantId']
-#     episode = data['episode']
-#     # Fetch participant details and return scoring options
-#     participant = Participant.query.get(participant_id)
-#     # Simulating scoring options, modify as needed
-#     scoring_data = {
-#         'participantId': participant.id,
-#         'name': participant.name,
-#         'category': participant.category
-#     }
-#     return jsonify([scoring_data])
-
-
-
-# @app.route('/api/scorer/contest-status', methods=['GET'])
-# def get_contest_status():
-#     episode = request.args.get('episode')
-#     # Check if contest has started for the episode and get participants
-#     participants = Participant.query.filter_by(episode=episode).all()
-#     return jsonify({
-#         'started': True,  # Replace with actual contest status check
-#         'participants': [{'id': p.id, 'name': p.name, 'category': p.category} for p in participants]
-#     })
-
 @app.route('/api/coordinator/contest-status', methods=['GET'])
 def get_contest_status():
     return jsonify({'status':contest_active})
