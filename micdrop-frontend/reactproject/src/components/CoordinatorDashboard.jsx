@@ -447,7 +447,7 @@ const CoordinatorDashboard = () => {
 
   const handleStartScoring = async (participantId) => {
     try {
-      const response = await axios.post(`/admin/activate_voting`, { participant_id:participantId });
+      const response = await apiClient.post(`/admin/activate_voting`, { participant_id:participantId });
       // setScoringData(response.data);
     } catch (error) {
       console.error("Error starting scoring:", error);
