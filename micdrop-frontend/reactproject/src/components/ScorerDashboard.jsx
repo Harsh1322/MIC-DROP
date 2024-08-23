@@ -34,7 +34,7 @@ const ScorerDashboard = () => {
   useEffect(() => {
     const checkVotingStatus = async () => {
         try {
-            const response = await axios.get('/admin/voting_status');
+            const response = await apiClient.get('/admin/voting_status');
             if(response.data.participant_id!==-1){
                 setParticipantId(response.data.participant_id)
                 console.log(response.data.participant_id)

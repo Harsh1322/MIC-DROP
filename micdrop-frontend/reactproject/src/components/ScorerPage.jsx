@@ -4,6 +4,7 @@ import Timer from './Timer';
 import './scorerpage.css';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import apiClient from '../api';
 
 const ScorerPage = () => {
   const [selectedValue, setSelectedValue] = useState(null);
@@ -31,7 +32,7 @@ const ScorerPage = () => {
 //   useEffect(() => {
 //     const checkVotingStatus = async () => {
 //         try {
-//             const response = await axios.get('/admin/voting_status');
+//             const response = await apiClient.get('/admin/voting_status');
 //             if(response.data.participant_id!==-1){
 //                 setParticipantId(response.data.participant_id)
 //                 console.log(response.data.participant_id)
@@ -48,7 +49,7 @@ const ScorerPage = () => {
 
 const submitVote = async (score) => {
     try {
-        await axios.post('/vote', { participant_id: parseInt(id), score });
+        await apiClient.post('/vote', { participant_id: parseInt(id), score });
         setSelectedValue(score);
         setDialogMessage('Thank you for voting! Do not refresh! You will be redirected to another page');
         setShowDialog(true);
