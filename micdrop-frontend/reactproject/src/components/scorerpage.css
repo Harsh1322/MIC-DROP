@@ -68,7 +68,7 @@
   
   /* Individual vote cards styling */
   .vote-card {
-    background-color: #007bff;
+    background-image: linear-gradient(135deg, #a3b1ff 10%, #9d65ece1 100%);
     color: #fff;
     font-size: 1.5rem;
     padding: 20px;

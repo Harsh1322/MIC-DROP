@@ -30,6 +30,7 @@ const Leaderboard = () => {
             <TableCell>Name</TableCell>
             <TableCell>Score</TableCell>
             <TableCell>Vote</TableCell>
+            <TableCell>Category</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -39,6 +40,7 @@ const Leaderboard = () => {
               <TableCell>{participant.name}</TableCell>
               <TableCell>{participant.score}</TableCell>
               <TableCell>{participant.vote_count}</TableCell>
+              <TableCell>Dance</TableCell>
             </TableRow>
           ))}
         </TableBody>

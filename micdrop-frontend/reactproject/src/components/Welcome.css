@@ -1,0 +1,105 @@
+/* Basic reset to remove default padding and margins */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9fafb;
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Center container with light soothing background */
+  .welcome-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: linear-gradient(135deg, #a3b1ff 10%, #9d65ece1 100%);
+    color: #2e3d49;
+  }
+  
+  /* Center the content with soft shadow and border radius */
+  .welcome-content {
+    text-align: center;
+    padding: 30px;
+    max-width: 500px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  /* Styling the main heading with color and margin */
+  .welcome-heading {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #00796b;
+    font-weight: bold;
+  }
+  
+  /* Styling the episode subheading with complementary color */
+  .episode-heading {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #5c6bc0;
+  }
+  
+  /* Styling the waiting message */
+  .waiting-message {
+    font-size: 1.2rem;
+    color: #455a64;
+  }
+  
+  /* Animation for a smooth fade-in effect */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive design adjustments */
+  @media (max-width: 600px) {
+    .welcome-heading {
+      font-size: 2rem;
+    }
+    
+    .episode-heading {
+      font-size: 1.5rem;
+    }
+    
+    .waiting-message {
+      font-size: 1rem;
+    }
+    .instructions-heading {
+        font-size: 1.3rem;
+      }
+    
+      .instructions-list {
+        font-size: 1rem;
+      }
+  }
+  
+
+.instructions-heading {
+    font-size: 1.5rem;
+    color: #5c6bc0;
+    margin-bottom: 10px;
+  }
+  
+  .instructions-list {
+    list-style-type: none;
+    padding: 0;
+    color:black;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .instructions-list li {
+    margin-bottom: 10px;
+  }

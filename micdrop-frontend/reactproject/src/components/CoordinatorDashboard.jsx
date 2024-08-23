@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, TextField, MenuItem, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Card, CardContent, Select, Box} from '@mui/material';
 import apiClient from '../api';
@@ -400,7 +401,7 @@ const CoordinatorDashboard = () => {
     }
   };
 
- 
+ const navigate=useNavigate();
 
   const fetchParticipants = async () => {
     try {
@@ -478,7 +479,9 @@ const CoordinatorDashboard = () => {
       console.error("Error submitting score:", error);
     }
   };
-
+  const navigateLeaderboard =  () => {
+    navigate('/leaderboard')
+  };
   return (
     <Container>
       {!isAuthenticated ? (
@@ -652,6 +655,9 @@ const CoordinatorDashboard = () => {
           />
           <Button variant="contained" color="primary" onClick={handleSubmitReport} style={{ marginTop: '1rem' }}>
             Submit Report
+          </Button>
+          <Button variant="contained" color="primary" onClick={navigateLeaderboard} style={{ marginTop: '1rem' }}>
+            Leaderboard
           </Button>
         </CardContent>
       </Card>

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { ContestContext } from '../context/ContestProvider';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api';
+import './Welcome.css'
 
 const ScorerDashboard = () => {
   const [episode, setEpisode] = useState('');
@@ -73,11 +74,26 @@ const ScorerDashboard = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>Welcome to Mic Drop</Typography>
-
-
+  
       {!contestStarted ? (
-        <Typography variant="body1">No contest is currently running. Please wait for the coordinator to start the contest.</Typography>
+        // <Typography variant="body1">No contest is currently running. Please wait for the coordinator to start the contest.</Typography>
+        <div className="welcome-container">
+      <div className="welcome-content">
+        <h1 className="welcome-heading">Welcome to the Mic Drop competition</h1>
+        <h2 className="episode-heading">Episode Surat</h2>
+        <p className="waiting-message">Kindly wait for the scoring to begin</p>
+        {/* Instruction Section */}
+        <div className="instructions-section">
+          <h3 className="instructions-heading">Instructions:</h3>
+          <ul className="instructions-list">
+            <li>1) As soon as scoring starts, you will be redirected to a new page.</li>
+            <li>2) You will have to score the participant by selecting any value from 1-10.</li>
+            <li>3) That's it, enjoy and wait for the next marking!!</li>
+          </ul>
+        </div>
+      </div>
+      
+    </div>
       ) : (
         <>
           <Typography variant="h6" gutterBottom>Episode: {episode} </Typography>
