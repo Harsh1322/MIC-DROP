@@ -65,7 +65,7 @@ const submitVote = async (score) => {
 
   return (
     <div className="voting-container">
-      <Timer seconds={30} onTimeOver={handleTimeOver} />
+      <Timer seconds={15} onTimeOver={handleTimeOver} />
       <h1>Score for {name} {category} performance</h1>
       <div className="card-container">
         {Array.from({ length: 10 }, (_, index) => (
