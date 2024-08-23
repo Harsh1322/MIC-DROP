@@ -8,6 +8,7 @@ import VotingComponent from './components/VotingComponent';
 import LakshyaDashboard from './components/LakshyaDashboard';
 import ScorerPage from './components/ScorerPage';
 import Leaderboard from './components/LeaderBoard';
+import TablePage from './components/TablePage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/voter/:id" element={<ScorerPage />} />
         <Route path="/lakshya" element={<LakshyaDashboard />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/admin/leaderboard" element={<TablePage />} />
       </Routes>
     </Router>
   );

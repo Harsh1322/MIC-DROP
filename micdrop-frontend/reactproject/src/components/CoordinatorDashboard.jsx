@@ -446,11 +446,11 @@ const CoordinatorDashboard = () => {
 
   const handleStartScoring = async (participantId) => {
     try {
-      const response = await apiClient.post(`/api/coordinator/start-scoring`, { participantId, episode });
-      setScoringData(response.data);
-    } catch (error) {
-      console.error("Error starting scoring:", error);
-    }
+      await apiClient.post('/admin/activate_voting', { participant_id: participantId});
+      alert('Voting activated for 30 seconds');
+  } catch (error) {
+      console.error('Error activating voting:', error);
+  }
   };
 
   const handleSubmitReport = async () => {
