@@ -289,6 +289,8 @@ def reset_contest():
     voting_active = False
     active_participant_id = -1
     for p in Participant.query.filter_by(episode=episode).all():
+        Vote.query.filter_by(partipant_id=p.id).delete()
+        db.session.commit()
         db.session.delete(p)
         db.session.commit()
     # Implement logic to reset the contest
