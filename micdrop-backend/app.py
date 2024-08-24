@@ -11,13 +11,13 @@ import os
 import threading
 from flask_cors import CORS
 from sqlalchemy import desc
-
+from urllib.parse import quote_plus as urlquote
 
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///micdrop.db'
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] =  f"postgresql://{urlquote(os.getenv('DB_USER'))}:{urlquote(os.getenv('DB_PASSWORD'))}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 
+db = SQLAlchemy(app)
 
 class Coordinator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
