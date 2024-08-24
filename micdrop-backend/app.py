@@ -55,7 +55,7 @@ class Admin(db.Model):
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    participant_id = db.Column(db.Integer, db.ForeignKey('participant.id'), nullable=False, ondelete='CASCADE')
+    participant_id = db.Column(db.Integer, db.ForeignKey('participant.id', ondelete='CASCADE'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
 
 @app.route('/api/admin/send-otp', methods=['POST'])
