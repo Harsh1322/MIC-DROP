@@ -380,6 +380,19 @@ const CoordinatorDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [message, setMessage] = useState('');
 
+  useEffect(() => {
+    const checkContestStatus = async () => {
+        try {
+            const response = await apiClient.get('/api/coordinator/contest-status');
+            setContestStarted(response.data.status)
+            console.log(contestStarted)
+        } catch (error) {
+            console.error('Error checking contest status:', error);
+        }
+    };
+    checkContestStatus();
+}, []);
+
   const handleSendOtp = async () => {
     try {
       await apiClient.post('/api/coordinator/send-coordinator-otp', { email: email, episode: episode });
@@ -412,7 +425,6 @@ const CoordinatorDashboard = () => {
     }
   };
   useEffect(() => {
-    
     fetchParticipants();
   
 }, [episode]);
@@ -447,8 +459,13 @@ const CoordinatorDashboard = () => {
 
   const handleStartScoring = async (participantId) => {
     try {
-      const response = await apiClient.post(`/admin/activate_voting`, { participant_id:participantId });
-      // setScoringData(response.data);
+      if(contestStarted){
+        const response = await apiClient.post(`/admin/activate_voting`, { participant_id:participantId });
+        alert('Scoring activated for 15 seconds!!');
+      }
+      else{
+        alert('Please start contest to start voting.');
+      }
     } catch (error) {
       console.error("Error starting scoring:", error);
     }
@@ -465,7 +482,7 @@ const CoordinatorDashboard = () => {
       });
       console.log(eventDate.toString())
       alert("Report submitted successfully!");
-      // setContestStarted(false);
+      setContestStarted(false);
     } catch (error) {
       console.error("Error submitting report:", error);
     }

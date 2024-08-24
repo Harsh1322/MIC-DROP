@@ -575,69 +575,6 @@ const AdminDashboard = () => {
 </Typography>
 
 <TablePage/>
-
-
-<TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Episode</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Total Kishores</TableCell>
-            <TableCell>Total Categories</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {reports.map((report) => (
-            <React.Fragment key={report.id}>
-              <TableRow onClick={() => handleRowClick(report.id)} style={{ cursor: 'pointer' }}>
-                <TableCell>{report.episode}</TableCell>
-                <TableCell>{report.date}</TableCell>
-                <TableCell>{report.totalKishores}</TableCell>
-                <TableCell>{report.totalCategories}</TableCell>
-                <TableCell>
-                  <Button color="primary" onClick={() => handleExportReport(report.id, 'pdf')}>
-                    Export PDF
-                  </Button>
-                  <Button color="primary" onClick={() => handleExportReport(report.id, 'xlsx')}>
-                    Export Excel
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
-                  <Collapse in={expandedRow === report.id} timeout="auto" unmountOnExit>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>SNo.</TableCell>
-                          <TableCell>Participant Name</TableCell>
-                          <TableCell>Category</TableCell>
-                          <TableCell>Number of Votes</TableCell>
-                          <TableCell>Average Score</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {report.participants.map((participant, index) => (
-                          <TableRow key={participant.id}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{participant.name}</TableCell>
-                            <TableCell>{participant.category}</TableCell>
-                            <TableCell>{participant.votes}</TableCell>
-                            <TableCell>{participant.avgScore}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Collapse>
-                </TableCell>
-              </TableRow>
-            </React.Fragment>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>  
       </Box>
       )}
     </Container>

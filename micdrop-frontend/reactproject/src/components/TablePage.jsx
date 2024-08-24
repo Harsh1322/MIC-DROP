@@ -2,19 +2,16 @@ import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { CSVLink } from 'react-csv';
 import './TablePage.css'; // Import CSS for styling
+import apiClient from '../api';
 
 const TablePage = () => {
-  const [tableData, setTableData] = useState([
-    { episode: 'AGARTALA', categories: '12', kishores: 5, participant: 'John Doe' },
-    { episode: 'Episode 2', categories: '15', kishores: 3, participant: 'Jane Smith' },
-    // Add more rows as needed
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [csvData, setCsvData] = useState([]);
   const [csvFilename, setCsvFilename] = useState('participants.csv');
 
   const handleDownload = async (episode) => {
     try {
-      const response = await axios.get(`/api/coordinator/participants?episode=${episode}`);
+      const response = await apiClient.get(`/api/coordinator/participants?episode=${episode}`);
       console.log(episode)
       console.log(response.data)
       setCsvData(response.data);
@@ -32,6 +29,18 @@ useEffect(() => {
    }
 }, [csvData])
 
+const fetchReports = async () => {
+  try {
+    const response = await apiClient.get('/api/admin/reports');
+    setTableData(response.data);
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+  }
+};
+
+useEffect(() => {
+  fetchReports();
+}, []);
   return (
     <div className="table-container">
       <h2 className="table-title">Participants Table</h2>
@@ -39,17 +48,19 @@ useEffect(() => {
         <thead>
           <tr>
             <th>Episode</th>
+            <th>Date</th>
             <th>Categories</th>
             <th>Kishores</th>
-            <th>Download Participants</th>
+            <th>Participant List</th>
           </tr>
         </thead>
         <tbody>
           {tableData.map((row, index) => (
             <tr key={index}>
               <td>{row.episode}</td>
-              <td>{row.categories}</td>
-              <td>{row.kishores}</td>
+              <td>{row.date}</td>
+              <td>{row.totalCategories}</td>
+              <td>{row.totalKishores}</td>
               <td>
                 <button className="download-button" onClick={() => handleDownload(row.episode)}>
                   Download

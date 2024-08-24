@@ -28,9 +28,9 @@ const Leaderboard = () => {
           <TableRow>
             <TableCell>Rank</TableCell>
             <TableCell>Name</TableCell>
+            <TableCell>Category</TableCell>
             <TableCell>Score</TableCell>
             <TableCell>Vote</TableCell>
-            <TableCell>Category</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -38,9 +38,9 @@ const Leaderboard = () => {
             <TableRow key={index+1}>
                 <TableCell>{index+1}</TableCell>
               <TableCell>{participant.name}</TableCell>
+              <TableCell>{participant.category}</TableCell>
               <TableCell>{participant.score}</TableCell>
               <TableCell>{participant.vote_count}</TableCell>
-              <TableCell>Dance</TableCell>
             </TableRow>
           ))}
         </TableBody>

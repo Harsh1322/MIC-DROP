@@ -62,7 +62,7 @@ class Vote(db.Model):
 @app.route('/api/admin/send-otp', methods=['POST'])
 def send_otp():
     email = request.json.get('email')
-    if email != 'gadiya.harsh@gmail.com':
+    if email != 'gadiya.harsh@gmail.com' and email != 'arpitjainmalu2@gmail.com' and email != 'mudishah1803@gmail.com':
         return jsonify({'error': 'Unauthorized'}), 403
 
     otp = str(random.randint(100000, 999999))
@@ -351,6 +351,11 @@ def activate_voting():
         voting_active = True
         data = request.json
         active_participant_id = data.get('participant_id')
+        participant = Participant.query.get(active_participant_id)
+        if participant:
+            participant.avg_score=0
+            participant.vote_count=0
+            db.session.commit()
         # Set a timer to deactivate voting after 30 seconds
         timer = threading.Timer(30.0, deactivate_voting)
         timer.start()
@@ -388,7 +393,7 @@ def vote():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     participants = Participant.query.order_by(desc(Participant.avg_score)).all()
-    leaderboard = [{'id': p.id, 'name': p.name, 'score': p.avg_score, 'vote_count': p.vote_count} for p in participants]
+    leaderboard = [{'id': p.id, 'name': p.name,'category': p.category, 'score': p.avg_score, 'vote_count': p.vote_count} for p in participants]
     return jsonify(leaderboard)    
     
 # @app.route('/api/coordinator/votes', methods=['GET'])
