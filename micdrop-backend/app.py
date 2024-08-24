@@ -291,9 +291,6 @@ def reset_contest():
     active_participant_id = -1
     for p in Participant.query.filter_by(episode=episode).all():
         db.session.delete(p)
-        p.avg_score=0
-        p.vote_count=0
-        db.session.add(p)
         db.session.commit()
     # Implement logic to reset the contest
     return jsonify({'message': 'Contest reset successfully'})
