@@ -46,7 +46,7 @@ class Score(db.Model):
     participant_id = db.Column(db.Integer, nullable=False)
     score = db.Column(db.Integer, nullable=False)
     # You might want to include additional fields to track devices/users
-    participant = db.relationship('Participant', backref=db.backref('scores', lazy=True))
+    # participant = db.relationship('Participant', backref=db.backref('scores', lazy=True))
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
