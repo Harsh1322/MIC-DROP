@@ -80,7 +80,7 @@ const ScorerDashboard = () => {
         <div className="welcome-container">
       <div className="welcome-content">
         <h1 className="welcome-heading">Welcome to the Mic Drop competition</h1>
-        <h2 className="episode-heading">Episode Surat</h2>
+        <h2 className="episode-heading">Episode Jaipur</h2>
         <p className="waiting-message">Kindly wait for the scoring to begin</p>
         {/* Instruction Section */}
         <div className="instructions-section">

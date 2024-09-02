@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, TextField, MenuItem, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Card, CardContent, Select, Box} from '@mui/material';
 import apiClient from '../api';
+import { useParams } from 'react-router-dom';
 
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
-
+    const {episode} = useParams()
     const fetchLeaderboard = async () => {
         try {
-            const response = await apiClient.get('/leaderboard');
+            const response = await apiClient.get(`/leaderboard/?episode=${episode}`);
             setLeaderboard(response.data);
         } catch (error) {
             console.error('Error fetching leaderboard:', error);

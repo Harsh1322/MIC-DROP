@@ -497,7 +497,7 @@ const CoordinatorDashboard = () => {
     }
   };
   const navigateLeaderboard =  () => {
-    navigate('/leaderboard')
+    navigate(`/leaderboard/${episode}`)
   };
   return (
     <Container>

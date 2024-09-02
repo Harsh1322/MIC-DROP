@@ -20,7 +20,7 @@ function App() {
         <Route path="/scorer" element={<ScorerDashboard />} />
         <Route path="/voter/:id" element={<ScorerPage />} />
         <Route path="/lakshya" element={<LakshyaDashboard />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/leaderboard/:episode" element={<Leaderboard />} />
         <Route path="/thankyou" element={<ThankYou/>} />
       </Routes>
     </Router>
