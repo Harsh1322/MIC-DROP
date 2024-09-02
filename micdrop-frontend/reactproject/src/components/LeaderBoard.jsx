@@ -9,7 +9,7 @@ const Leaderboard = () => {
     const {episode} = useParams()
     const fetchLeaderboard = async () => {
         try {
-            const response = await apiClient.get(`/leaderboard/?episode=${episode}`);
+            const response = await apiClient.get(`/leaderboard?episode=${episode}`);
             setLeaderboard(response.data);
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
