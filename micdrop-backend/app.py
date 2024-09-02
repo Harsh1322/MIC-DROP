@@ -391,6 +391,7 @@ def vote():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     episode = request.args.get('episode')
+    episode = episode.upper()
     participants = Participant.query.filter_by(episode=episode).order_by(desc(Participant.avg_score)).all()
     leaderboard = [{'id': p.id, 'name': p.name,'category': p.category, 'score': p.avg_score, 'vote_count': p.vote_count} for p in participants]
     return jsonify(leaderboard)    
