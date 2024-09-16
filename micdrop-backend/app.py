@@ -245,13 +245,15 @@ def add_participant():
 contest_active = False
 voting_active = False
 active_participant_id = -1
+active_episode = ''
 
 @app.route('/api/coordinator/submit-report', methods=['POST'])
 def submit_report():
-    global contest_active, voting_active, active_participant_id
+    global contest_active, voting_active, active_participant_id, active_episode
     contest_active = False
     voting_active = False
     active_participant_id = -1
+    active_episode = ''
     data = request.json
     report = Report(
         episode=data['episode'],
@@ -273,21 +275,24 @@ def get_voting_data():
     return jsonify({'message': 'Participant not found'})
 
 
-@app.route('/api/coordinator/start-contest', methods=['GET'])
+@app.route('/api/coordinator/start-contest', methods=['POST'])
 def start_contest():
-    global contest_active
+    global contest_active, active_episode
+    data = request.json
     if not contest_active:
         contest_active=True
+        active_episode = data['episode']
     return jsonify({'message': 'Contest started successfully'})
 
 @app.route('/api/coordinator/reset-contest', methods=['POST'])
 def reset_contest():
-    global contest_active, voting_active, active_participant_id
+    global contest_active, voting_active, active_participant_id,active_episode
     data = request.json
     episode = data['episode']
     contest_active = False
     voting_active = False
     active_participant_id = -1
+    active_episode = ''
     for p in Participant.query.filter_by(episode=episode).all():
         Vote.query.filter_by(participant_id=p.id).delete()
         db.session.commit()
@@ -335,6 +340,9 @@ def get_contest_status():
 #     # Implement logic to save score, ensure unique scoring per device
 #     return jsonify({'message': 'Score submitted successfully'})
 
+@app.route('/api/scorer/active-episode-status', methods=['GET'])
+def get_episode_status():
+    return jsonify({'active_episode':active_episode})
 
 def deactivate_voting():
     global voting_active, active_participant_id
