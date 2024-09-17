@@ -430,7 +430,7 @@ const CoordinatorDashboard = () => {
 }, [episode]);
   const handleStartContest = async () => {
     try {
-      await apiClient.get(`/api/coordinator/start-contest`);
+      await apiClient.post(`/api/coordinator/start-contest`,{ episode:episode});
       setContestStarted(true);
     } catch (error) {
       console.error("Error starting contest:", error);
@@ -497,7 +497,8 @@ const CoordinatorDashboard = () => {
     }
   };
   const navigateLeaderboard =  () => {
-    navigate(`/leaderboard/${episode}`)
+    // navigate(`/leaderboard/${episode}`)
+    window.open(`https://tkm-axis-mic-drop.onrender.com/leaderboard/${episode}`)
   };
   return (
     <Container>

@@ -51,7 +51,19 @@ const ScorerDashboard = () => {
     checkVotingStatus();
 }, []);
 
- 
+useEffect(() => {
+  const getCurrentEpisode = async () => {
+      try {
+          const response = await apiClient.get('/api/scorer/active-episode-status');
+          setEpisode(response.data.active_episode)
+          
+      } catch (error) {
+          console.error('Error checking voting status:', error);
+      }
+  };
+
+  getCurrentEpisode();
+}, []);
   
 
   const handleScore = async (participantId, score) => {
@@ -80,7 +92,7 @@ const ScorerDashboard = () => {
         <div className="welcome-container">
       <div className="welcome-content">
         <h1 className="welcome-heading">Welcome to the Mic Drop competition</h1>
-        <h2 className="episode-heading">Episode Jaipur</h2>
+        <h2 className="episode-heading">Episode {episode}</h2>
         <p className="waiting-message">Kindly wait for the scoring to begin</p>
         {/* Instruction Section */}
         <div className="instructions-section">
