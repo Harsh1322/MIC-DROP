@@ -15,7 +15,7 @@ from urllib.parse import quote_plus as urlquote
 
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://micdrop_kbzu_user:xJ5lcGnw8GVTRzlushU1MiUBeWBesxmN@dpg-d3jv6dj3fgac73ebjq8g-a/micdrop_kbzu"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://micdrop_kbzu_user:xJ5lcGnw8GVTRzlushU1MiUBeWBesxmN@dpg-d3jv6dj3fgac73ebjq8g-a/micdrop_kbzu?sslmode=disable"
 db = SQLAlchemy(app)
 
 class Coordinator(db.Model):
