@@ -184,13 +184,13 @@ def send_coordinator_otp():
     
 @app.route('/api/coordinator/verify-coordinator-otp', methods=['POST'])
 def verify_coordinator_otp():
-    otp = request.json.get('otp')
+    # otp = request.json.get('otp')
     email = request.json.get('email')
     episode = request.json.get('episode')
     coordinator = Coordinator.query.filter_by(episode=episode, email=email).first()
-    if coordinator and coordinator.otp == otp:
-        return jsonify({'message': 'OTP verified successfully'}), 200
-    return jsonify({'error': 'Invalid OTP'}), 400
+    if coordinator:
+        return jsonify({'message': 'Coordinator verified successfully'}), 200
+    return jsonify({'error': 'Invalid Coordinator Email or Episode'}), 400
 
 @app.route('/api/admin/verify-otp', methods=['POST'])
 def verify_otp():
