@@ -18,3 +18,4 @@ fpdf==1.7.2
 gunicorn==23.0.0
 psycopg2-binary==2.9.7
 flask-migrate==4.0.7
+resend
