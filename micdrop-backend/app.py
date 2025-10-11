@@ -12,11 +12,13 @@ import threading
 from flask_cors import CORS
 from sqlalchemy import desc
 from urllib.parse import quote_plus as urlquote
+import resend
 
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://micdrop_kbzu_user:xJ5lcGnw8GVTRzlushU1MiUBeWBesxmN@dpg-d3jv6dj3fgac73ebjq8g-a/micdrop_kbzu?sslmode=disable"
 db = SQLAlchemy(app)
+resend.api_key = os.environ["RESEND_API_KEY"]
 
 class Coordinator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +60,20 @@ class Vote(db.Model):
     participant_id = db.Column(db.Integer, db.ForeignKey('participant.id'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
 
+def send_email_via_resend(to_email, otp):
+    try:
+        params = {
+            "from": "Mic Drop <onboarding@resend.dev>",
+            "to": [to_email],
+            "subject": "Your OTP for Mic Drop Portal",
+            "html": f"<p>Your OTP is <b>{otp}</b></p>",
+        }
+        email = resend.Emails.send(params)
+        return True
+    except Exception as e:
+        print("Resend Error:", e)
+        return False
+
 @app.route('/api/admin/send-otp', methods=['POST'])
 def send_otp():
     email = request.json.get('email')
@@ -78,29 +94,37 @@ def send_otp():
     # Here you would send the OTP via email
     print(f"OTP for {email}: {otp}")
 
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    smtp_user = "gadiya.harsh@gmail.com"  
-    smtp_password = "hubgctbpqdxrxaaq" 
+    #Sending email via HTTPS Resend Website instead of SMTP
+    email_status = send_email_via_resend(email, otp)
 
-    subject = "Welcome to Mic Drop Portal!!"
-    body = f"Your OTP code is: {otp}"
-
-    msg = MIMEMultipart()
-    msg['From'] = smtp_user
-    msg['To'] = email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-    
-    try:
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()  # Secure the connection
-        server.login(smtp_user, smtp_password)
-        server.sendmail(smtp_user, email, msg.as_string())
-        server.quit()
+    if email_status:
         return jsonify({'message': 'OTP sent successfully'}), 200
-    except Exception as e:
-        return jsonify({'message': 'OTP send failed'}), 400
+    else:
+         return jsonify({'message': 'OTP send failed'}), 400
+
+    # smtp_server = "smtp.gmail.com"
+    # smtp_port = 587
+    # smtp_user = "gadiya.harsh@gmail.com"  
+    # smtp_password = "hubgctbpqdxrxaaq" 
+
+    # subject = "Welcome to Mic Drop Portal!!"
+    # body = f"Your OTP code is: {otp}"
+
+    # msg = MIMEMultipart()
+    # msg['From'] = smtp_user
+    # msg['To'] = email
+    # msg['Subject'] = subject
+    # msg.attach(MIMEText(body, 'plain'))
+    
+    # try:
+    #     server = smtplib.SMTP(smtp_server, smtp_port)
+    #     server.starttls()  # Secure the connection
+    #     server.login(smtp_user, smtp_password)
+    #     server.sendmail(smtp_user, email, msg.as_string())
+    #     server.quit()
+    #     return jsonify({'message': 'OTP sent successfully'}), 200
+    # except Exception as e:
+    #     return jsonify({'message': 'OTP send failed'}), 400
 
 @app.route('/api/coordinator/send-coordinator-otp', methods=['POST'])
 def send_coordinator_otp():
@@ -114,29 +138,37 @@ def send_coordinator_otp():
 
         print(f"OTP for {email}: {otp}")
 
-        smtp_server = "smtp.gmail.com"
-        smtp_port = 587
-        smtp_user = "gadiya.harsh@gmail.com"
-        smtp_password = "hubgctbpqdxrxaaq"  
+        #Sending email via HTTPS Resend Website instead of SMTP
+        email_status = send_email_via_resend(email, otp)
 
-        subject = "Welcome to Mic Drop Portal!!"
-        body = f"Your OTP code is: {otp}"
-
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
-    
-        try:
-            server = smtplib.SMTP(smtp_server, smtp_port)
-            server.starttls()  # Secure the connection
-            server.login(smtp_user, smtp_password)
-            server.sendmail(smtp_user, email, msg.as_string())
-            server.quit()
+        if email_status:
             return jsonify({'message': 'OTP sent successfully'}), 200
-        except Exception as e:
+        else:
             return jsonify({'message': 'OTP send failed'}), 400
+
+        # smtp_server = "smtp.gmail.com"
+        # smtp_port = 587
+        # smtp_user = "gadiya.harsh@gmail.com"
+        # smtp_password = "hubgctbpqdxrxaaq"  
+
+        # subject = "Welcome to Mic Drop Portal!!"
+        # body = f"Your OTP code is: {otp}"
+
+        # msg = MIMEMultipart()
+        # msg['From'] = smtp_user
+        # msg['To'] = email
+        # msg['Subject'] = subject
+        # msg.attach(MIMEText(body, 'plain'))
+    
+        # try:
+        #     server = smtplib.SMTP(smtp_server, smtp_port)
+        #     server.starttls()  # Secure the connection
+        #     server.login(smtp_user, smtp_password)
+        #     server.sendmail(smtp_user, email, msg.as_string())
+        #     server.quit()
+        #     return jsonify({'message': 'OTP sent successfully'}), 200
+        # except Exception as e:
+        #     return jsonify({'message': 'OTP send failed'}), 400
     else:
         print(email,episode)
         coordinators = Coordinator.query.all()
