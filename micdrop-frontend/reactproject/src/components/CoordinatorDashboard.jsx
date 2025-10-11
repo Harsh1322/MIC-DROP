@@ -393,15 +393,15 @@ const CoordinatorDashboard = () => {
     checkContestStatus();
 }, []);
 
-  const handleSendOtp = async () => {
-    try {
-      await apiClient.post('/api/coordinator/send-coordinator-otp', { email: email, episode: episode });
-      setMessage('OTP sent to your Email Address.');
-    } catch (error) {
-      setMessage('Failed to send OTP.');
-      console.error('Error sending OTP:', error);
-    }
-  };
+  // const handleSendOtp = async () => {
+  //   try {
+  //     await apiClient.post('/api/coordinator/send-coordinator-otp', { email: email, episode: episode });
+  //     setMessage('OTP sent to your Email Address.');
+  //   } catch (error) {
+  //     setMessage('Failed to send OTP.');
+  //     console.error('Error sending OTP:', error);
+  //   }
+  // };
 
   const handleVerifyOtp = async () => {
     try {
@@ -526,7 +526,7 @@ const CoordinatorDashboard = () => {
           fullWidth
           margin="normal"
         />
-        <Button variant="contained" color="primary" onClick={handleSendOtp}>Send OTP</Button>
+        {/* <Button variant="contained" color="primary" onClick={handleSendOtp}>Send OTP</Button>
         <TextField
           label="OTP"
           type="text"
@@ -534,8 +534,8 @@ const CoordinatorDashboard = () => {
           onChange={(e) => setOtp(e.target.value)}
           fullWidth
           margin="normal"
-        />
-        <Button variant="contained" color="primary" onClick={handleVerifyOtp}>Verify OTP</Button>
+        /> */}
+        <Button variant="contained" color="primary" onClick={handleVerifyOtp}>Login</Button>
         <Typography variant="body2" color="error">{message}</Typography>
       </Box>
     ) : (
